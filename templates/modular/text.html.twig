@@ -1,16 +1,49 @@
 {% set grid_size = theme_var('grid-size') %}
 {% set image = page.media.images|first %}
+{% set image_count = page.media.images|length %}
 
 <section class="section modular-text {{ page.header.class}} bg-gray">
     <section class="container {{ grid_size }}">
         <div class="columns {{ page.header.image_align|default('align-right') }}">
             {% if image %}
-            <div class="column col-6 col-md-12">
-                {{ content|raw }}
-            </div>
-            <div class="column col-6 col-md-12">
-                {{ image.html|raw }}
-            </div>
+                {% if image_count > 1 %}
+                <div class="column col-6 col-md-12">
+                    {{ content|raw }}
+                </div>
+                <div class="column col-6 col-md-12">
+                    <div class="carousel">
+                        {% for i in range(1,image_count) %}
+                            <input class="carousel-locator" id="slide-{{ i }}" type="radio" name="carousel-radio" hidden="" {% if i = 1 %}checked=""{% endif %}>
+                        {% endfor %}
+
+                        <div class="carousel-container">
+                            {% set counter = 0 %}
+                            {% for item in page.media.images %}
+                                {% counter++ %}
+                                <figure class="carousel-item">
+                                    <label class="item-prev btn btn-action btn-lg" for="slide-{% if counter = 1 %}1{% else %}{{ counter-1 }}{% endif %}"><i class="icon icon-arrow-left"></i></label>
+                                    <label class="item-next btn btn-action btn-lg" for="slide-{% if counter = image_count %}1{% else %}{{ counter+1 }}{% endif %}"><i class="icon icon-arrow-right"></i></label>
+                                    <img class="img-responsive rounded" src="{{ item.url }}" alt="{{ item. }}">
+                                </figure>
+                            {% endfor %}
+                        </div>
+
+                        <div class="carousel-nav">
+                            {% for i in range(1,image_count)%}
+                                <label class="nav-item text-hide c-hand" for="slide-{{ i }}">{{ i }}</label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {{ image.html|raw }}
+                </div>
+                {% else %}
+                <div class="column col-6 col-md-12">
+                    {{ content|raw }}
+                </div>
+                <div class="column col-6 col-md-12">
+                    {{ image.html|raw }}
+                </div>
+                {% endif%}
             {% else %}
             <div class="column col-12">
                 {{ content|raw }}
