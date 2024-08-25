@@ -13,17 +13,17 @@
                 <div class="column col-6 col-md-12">
                     <div class="carousel">
                         {% for i in range(1,image_count) %}
-                            <input class="carousel-locator" id="slide-{{ i }}" type="radio" name="carousel-radio" hidden="" {% if i = 1 %}checked=""{% endif %}>
+                            <input class="carousel-locator" id="slide-{{ i }}" type="radio" name="carousel-radio" hidden="" {% if i == 1 %}checked=""{% endif %}>
                         {% endfor %}
 
                         <div class="carousel-container">
                             {% set counter = 0 %}
                             {% for item in page.media.images %}
-                                {% counter++ %}
+                                {% set counter = counter + 1 %}
                                 <figure class="carousel-item">
-                                    <label class="item-prev btn btn-action btn-lg" for="slide-{% if counter = 1 %}1{% else %}{{ counter-1 }}{% endif %}"><i class="icon icon-arrow-left"></i></label>
-                                    <label class="item-next btn btn-action btn-lg" for="slide-{% if counter = image_count %}1{% else %}{{ counter+1 }}{% endif %}"><i class="icon icon-arrow-right"></i></label>
-                                    <img class="img-responsive rounded" src="{{ item.url }}" alt="{{ item. }}">
+                                    <label class="item-prev btn btn-action btn-lg" for="slide-{% if counter == 1 %}{{ image_count }}{% else %}{{ counter-1 }}{% endif %}"><i class="icon icon-arrow-left"></i></label>
+                                    <label class="item-next btn btn-action btn-lg" for="slide-{% if counter == image_count %}1{% else %}{{ counter+1 }}{% endif %}"><i class="icon icon-arrow-right"></i></label>
+                                    <img class="img-responsive rounded" src="{{ item.url }}" alt="{{ item.alt }}">
                                 </figure>
                             {% endfor %}
                         </div>
@@ -34,7 +34,6 @@
                             {% endfor %}
                         </div>
                     </div>
-                    {{ image.html|raw }}
                 </div>
                 {% else %}
                 <div class="column col-6 col-md-12">
